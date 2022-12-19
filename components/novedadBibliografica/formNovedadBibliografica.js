@@ -6,6 +6,7 @@ import FormNovedadBibliograficaDescripcion from './formNovedadBibliograficaDescr
 import FormNovedadBibliograficaIndice from './formNovedadBibliograficaIndice'
 import { ThreeDots } from 'react-loader-spinner'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 
 function FormNovedadBibliografica() {
 
@@ -26,7 +27,7 @@ function FormNovedadBibliografica() {
 
   const [indice, setIndice] = useState("")
   const [descripcion, setDescripcion] = useState("")
-  const [imagen, setImagen] = useState("")
+  const [imagenes, setImagenes] = useState("")
 
   const [terms, setTerms] = useState(false)
 
@@ -51,14 +52,18 @@ function FormNovedadBibliografica() {
         formatos,
         indice,
         descripcion,
-        imagen
+        imagenes
       })
-      toast.success('Novedad registrada correctamente. Ahora puede identificarse.')
+      toast.success('Novedad registrada correctamente.')
     } catch (err) {
       if(err.response){
-        toast.error('Error: ' + err.response.data)
+        toast.error('Error en el servidor: ' + err.response.data)
+      } else if(err.request){
+        toast.error('Error al enviar el formulario: ' + err.request.data)
+      } else if(err.message){
+        toast.error('Error: ' + err.message.data)
       } else {
-        toast.error('Error al registrar el libro. El servidor no responde.')
+        toast.error('Error al registrar el libro')
       }
     }
     setLoading(false)
@@ -103,7 +108,6 @@ function FormNovedadBibliografica() {
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="El moderno Prometeo"
             onChange={e => setSubtitulo(e.target.value)}
-            required
             value={subtitulo}
           />
         </div>

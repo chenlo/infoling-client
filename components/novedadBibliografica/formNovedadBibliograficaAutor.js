@@ -96,7 +96,7 @@ function FormNovedadBibliograficaAutor({ autores, setAutores }) {
       <div className="mb-6">
         <button
           className="btn btn-outline btn-secondary"
-          disabled={ !tipo || !nombre || !primerApellido || !segundoApellido }
+          disabled={ !tipo || !nombre || !primerApellido }
           onClick={(e) => {
             e.preventDefault;
             let autor = {
@@ -105,7 +105,7 @@ function FormNovedadBibliograficaAutor({ autores, setAutores }) {
               'segundoApellido': segundoApellido,
               'tipo': tipo,
             }
-            if(tipo && nombre && primerApellido && segundoApellido){
+            if(tipo && nombre && primerApellido){
               setAutores([...autores, autor]);
               setNombre('')
               setPrimerApellido('')

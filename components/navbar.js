@@ -52,7 +52,7 @@ export default function Navbar() {
                     <li><Link key="/compartir-informacion" href="/compartir-informacion" className="transform text-gray-700 transition-colors duration-300 hover:text-blue-500 dark:text-gray-200 dark:hover:text-blue-400 lg:mx-8" onClick={e => setCurrent(e.key)}>Compartir información</Link></li>
                 </ul>
             </div>
-            <div className="navbar-end lg:visible invisible ">
+            <div className="navbar-end lg:visible">
                 <Account />
             </div>
         </div>
