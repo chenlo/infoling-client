@@ -57,7 +57,7 @@ function FormNovedadBibliografica() {
       toast.success('Novedad registrada correctamente.')
     } catch (err) {
       if(err.response){
-        toast.error('Error en el servidor: ' + err.response.data)
+        toast.error('Error en el formulario: ' + err.response.data)
       } else if(err.request){
         toast.error('Error al enviar el formulario: ' + err.request.data)
       } else if(err.message){
@@ -69,33 +69,39 @@ function FormNovedadBibliografica() {
     setLoading(false)
   }
 
+  const getYears = () => {
+    let minOffset = 0, maxOffset = 250;
+    let thisYear = (new Date()).getFullYear();
+    let allYears = [];
+    for(let x = 0; x <= maxOffset; x++) {
+        allYears.push(thisYear - x)
+    }
+    return allYears.map((year) => {
+      return <option key={'anno-'+year} value={year}>{year} </option>;
+    });
+  }
+
   return (
     <>
-    <div className="alert alert-info shadow-sm mb-4">
-      <div className='text-white'>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span>No escriba en mayúsculas el nombre y/o apellido(s) del autor, el título o cualquier otra información sobre la publicación. Escriba, p. ej., Rodolfo Lenz, pero no RODOLFO LENZ; si se trata de un título, escriba La oración y sus partes, pero no LA ORACIÓN Y SUS PARTES.</span>
-      </div>
+    <div className="alert bg-base-100 shadow-sm mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <p>No escriba en mayúsculas el nombre y/o apellido(s) del autor, el título o cualquier otra información sobre la publicación. Escriba, p. ej., Rodolfo Lenz, pero no RODOLFO LENZ; si se trata de un título, escriba La oración y sus partes, pero no LA ORACIÓN Y SUS PARTES.</p>
     </div>
-    <div className="alert alert-info shadow-sm mb-8">
-      <div className='text-white'>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span>Infoling sólo puede anunciar las publicaciones sobre didáctica del ELE que vayan dirigidas a la formación del profesorado.</span>
-      </div>
+    <div className="alert bg-base-100 shadow-sm mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-current flex-shrink-0 w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <div>Infoling sólo puede anunciar las publicaciones sobre didáctica del ELE que vayan dirigidas a la formación del profesorado.</div>
     </div>
     <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
       <FormNovedadBibliograficaAutor autores={autores} setAutores={setAutores} />
       <fieldset className="border border-solid border-gray-300 p-5 mb-10 bg-base-100">
         <legend className="text-secondary bg-base-100 p-6 pt-3">Datos de la obra</legend>
         <div className="mb-6">
-          <label htmlFor="titulo" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Título *</label>
+          <label htmlFor="titulo" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required">Título</label>
           <input
             type="text"
             id="titulo"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Frankenstein"
-            required
-            autoFocus
             onChange={e => setTitulo(e.target.value)}
             value={titulo}
           />
@@ -114,17 +120,16 @@ function FormNovedadBibliografica() {
         <div className="mb-6">
           <label
             htmlFor="editorial"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
           >
-            Editorial *
+            Editorial
           </label>
           <input
             type="text"
             id="editorial"
             name="editorial"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Ediciones Complutense"
-            required
+            placeholder="Ediciones Complutense"           
             onChange={e => setEditorial(e.target.value)}
             value={editorial}
           />
@@ -150,29 +155,26 @@ function FormNovedadBibliografica() {
           <div>
             <label
               htmlFor="anno"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
             >
-              Año de publicación *
+              Año de publicación
             </label>
-            <input
-              type="number"
-              id="anno"
+            <select
+              className="select select-bordered w-full max-w-lg" 
               name="anno"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              min="1999"
-              max="2100"
-              placeholder="2022"
-              onChange={e => setAnno(e.target.value)}
-              required
               value={anno}
-            />
+              onChange={e => setAnno(e.target.value)}
+            >
+              <option value="" disabled>Seleccione el año de publicación</option>
+              { getYears() }
+            </select>
           </div>
           <div>
             <label
               htmlFor="lugarEdicion"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
             >
-              Lugar de edición *
+              Lugar de edición
             </label>
             <input
               type="text"
@@ -181,14 +183,13 @@ function FormNovedadBibliografica() {
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Barcelona"
               onChange={e => setLugarEdicion(e.target.value)}
-              required
               value={lugarEdicion}
             />
           </div>
           
         </div>
         <div className="mb-6">
-          <label htmlFor="url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">URL de acceso al libro</label>
+          <label htmlFor="url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">URL de acceso abierto al libro completo</label>
           <input
             type="text"
             id="url"

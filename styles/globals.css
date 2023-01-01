@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 @import '../node_modules/react-toastify/dist/ReactToastify.min.css';
+
+.required:before {
+    content:" *";
+    color: red;
+    margin-right: 0.5em;
+}

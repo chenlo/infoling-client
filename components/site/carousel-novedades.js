@@ -11,7 +11,7 @@ function NovedadBibliograficaCarousel() {
                         <a href="#" key={nb.id} className="flex flex-col items-center bg-white rounded-lg border shadow-md md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
                             <Image className="object-cover w-full h-96 rounded-t-lg md:h-auto md:w-48 md:rounded-none md:rounded-l-lg" 
                                 src="/libro.png" 
-                                alt="" 
+                                alt="Portada del libro" 
                                 width={100} 
                                 height={100}
                             />

@@ -6,8 +6,8 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
   
   const [tematicaSelected, setTematicaSelected] = useState("");
 
-  const handleChangeTematica = (event) => {
-    setTematicaSelected(event.target.value);
+  const handleChangeTematica = (e) => {
+    setTematicaSelected(e.target.value);
   };
 
   const tiposTematica = [
@@ -50,29 +50,25 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
 
   return (
     <fieldset className="border border-solid border-gray-300 p-5 mb-10 bg-base-100">
-        <legend className="text-secondary bg-base-100 p-6 pt-3">Temática</legend>
-        <div className="mb-6">
+        <legend className="text-secondary bg-base-100 p-6 pt-3 required">Temática</legend>
+        <div className="flex items-center select-none pb-5">
             <select 
                 className="select select-bordered w-full max-w-lg" 
                 onChange={handleChangeTematica}
                 value={tematicaSelected}
             >
-                <option value="">
-                    Temática de la obra
-                </option>
+                <option value="" disabled>Seleccione al menos una tema tratado en la obra</option>
                 {tiposTematica.map((tipoTematica, index) => (
                     <option key={"tipo-tematica-" + index} value={tipoTematica}>
                         {tipoTematica}
                     </option>
                 ))}
             </select>
-        </div>
-        <div className="mb-6">
             <button
-                className="btn btn-outline btn-secondary mr-2"
+                className="btn btn-outline btn-secondary m-2"
                 disabled={!tematicaSelected}
                 onClick={(e) => {
-                    e.preventDefault;
+                    e.preventDefault();
                     if (tematicaSelected) {
                         setTematicas([...tematicas, tematicaSelected]);
                         setTematicaSelected("");
@@ -81,31 +77,25 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
                 >
                 <PlusCircleIcon className="flex-shrink-0 w-6 h-6 mr-2" /> Añadir temática
             </button>
-            {
-                tematicas.length>0 ?
-                    <button
-                        className="btn btn-accent"
-                        onClick={(e) => {
-                            e.preventDefault;
-                            setTematicas([]);
-                            setTematicaSelected('');
-                        }}
-                        >
-                        <TrashIcon className="flex-shrink-0 w-6 h-6" /> Limpiar temáticas
-                    </button>
-                : <></>
-            }
         </div>
         <div className="flex justify-start">
             {
-                tematicas.length>0 ?
-                    tematicas.map((item, index) =>
-                        <div key={'tematica-'+index} className="badge badge-primary mr-2">
-                            { item }
-                        </div>
-                    )
-                :
-                <div className="badge badge-accent mr-4">Debe añadir por lo menos una temática.</div>
+                tematicas.map((item, index) =>
+                    <div key={'tematica-'+index} className="badge badge-info gap-3 mr-2">
+                        <button 
+                            onClick={(e) => { 
+                                e.preventDefault();
+                                var array = [...tematicas];
+                                if (index !== -1) {
+                                    array.splice(index, 1);
+                                    setTematicas(array);
+                                }
+                             }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="text-base-100 inline-block w-4 h-4 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                        <span className="text-lg mt-3 mb-4 text-base-100">{ item }</span>
+                    </div>
+                )
             }
         </div>
     </fieldset>

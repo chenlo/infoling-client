@@ -23,6 +23,7 @@ export default function Hero() {
                 <Image
                     src={fondoInfoling}
                     className="h-48 w-full rounded-xl object-cover lg:w-4/5"
+                    alt="Imagen decorativa de Infoling"
                 />
             </div>
         </div>

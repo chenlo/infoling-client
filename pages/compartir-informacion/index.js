@@ -31,32 +31,6 @@ export default function CompartirInformacion() {
                             </div>
                         </div>
                     </div>
-                    <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
-                        <div className="card w-96 bg-base-100 shadow-xl">
-                            <div className="card-body">
-                                <h2 className="card-title">Libro</h2>
-                                <p>Novedad bibliografica</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">
-                                        <Link href="/compartir-informacion/novedad-bibliografica">Compartir</Link>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
-                        <div className="card w-96 bg-base-100 shadow-xl">
-                            <div className="card-body">
-                                <h2 className="card-title">Libro</h2>
-                                <p>Novedad bibliografica</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">
-                                        <Link href="/compartir-informacion/novedad-bibliografica">Compartir</Link>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </Container>
         </div >

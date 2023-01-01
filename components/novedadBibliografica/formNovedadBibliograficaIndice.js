@@ -4,7 +4,7 @@ function FormNovedadBibliograficaIndice({ indice, setIndice }) {
   
   return (
     <fieldset className="border border-solid border-gray-300 p-5 mb-10 bg-base-100">
-        <legend className="text-secondary bg-base-100 p-6 pt-3">Índice</legend>
+        <legend className="text-secondary bg-base-100 p-6 pt-3 required">Índice</legend>
         <div className="mb-6">
         <textarea
           id="indice"
@@ -12,7 +12,6 @@ function FormNovedadBibliograficaIndice({ indice, setIndice }) {
           className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Lorem ipsum..."
           onChange={e => setIndice(e.target.value)}
-          required
           value={indice}
         />
           <ul className='text-left text-xs leading-6 text-zinc-500 mt-4 mb-8'>

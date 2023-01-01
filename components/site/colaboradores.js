@@ -77,6 +77,7 @@ export default function Colaboradores() {
                                     src={item.img}
                                     width={item.width}
                                     height={item.height}
+                                    alt="Logo de un colaborador de Infoling"
                                 />
                             </div>
                         </Link>
