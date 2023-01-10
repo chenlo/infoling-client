@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from "axios"
 import { toast } from 'react-toastify'
 import { ThreeDots } from 'react-loader-spinner';
-import Container from '../../components/container';
+import Container from '../../components/layout/container';
 import Heading from '../../components/site/heading';
 import FormNovedadBibliografica from '../../components/novedadBibliografica/formNovedadBibliografica';
 

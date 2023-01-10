@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 import { UserIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link';
 
-import { Context } from '../context'
+import { Context } from '../../context'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'

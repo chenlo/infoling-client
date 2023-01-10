@@ -1,9 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import FormNovedadBibliograficaAutor from './formNovedadBibliograficaAutor'
 import FormNovedadBibliograficaFormato from './formNovedadBibliograficaFormato'
 import FormNovedadBibliograficaTematica from './formNovedadBibliograficaTematica'
 import FormNovedadBibliograficaDescripcion from './formNovedadBibliograficaDescripcion'
 import FormNovedadBibliograficaIndice from './formNovedadBibliograficaIndice'
+import FormNovedadBibliograficaImagenes from './formNovedadBibliograficaImagenes'
+import ModalNovedadBibliograficaStep1 from './modalNovedadBibliograficaStep1'
+import ModalNovedadBibliograficaStep2 from './modalNovedadBibliograficaStep2'
+import ModalNovedadBibliograficaStep3 from './modalNovedadBibliograficaStep3'
+
+import ErrorAlert from '../site/error-alert'
 import { ThreeDots } from 'react-loader-spinner'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -11,6 +17,7 @@ import axios from 'axios'
 function FormNovedadBibliografica() {
 
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState([])
 
   const [autores, setAutores] = useState([]);
   const [formatos, setFormatos] = useState([]);
@@ -29,17 +36,24 @@ function FormNovedadBibliografica() {
   const [descripcion, setDescripcion] = useState("")
   const [imagenes, setImagenes] = useState("")
 
+  const [currentModal, setCurrentModal] = useState(0)
+
   const [terms, setTerms] = useState(false)
 
   const handleChangeTerms = () => {
     setTerms(!terms);
   };
 
+  const handleFocusAnno = (e) => {
+    let currentYear = new Date().getFullYear();
+    setAnno(currentYear);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       setLoading(true)
-      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/novedad-bibliografica`, {
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API}/validate/novedad-bibliografica`, {
         autores,
         titulo,
         subtitulo,
@@ -54,10 +68,24 @@ function FormNovedadBibliografica() {
         descripcion,
         imagenes
       })
-      toast.success('Novedad registrada correctamente.')
+      setErrors([])
+      toast.success('Los datos proporcionados de la Novedad Bibliográfica son válidos');
+      setCurrentModal(1)
+      document.getElementById('modal-form-nb-1').checked = true;
+      document.getElementById('modal-form-nb-2').checked = false;
+      document.getElementById('modal-form-nb-3').checked = false;
     } catch (err) {
       if(err.response){
-        toast.error('Error en el formulario: ' + err.response.data)
+        toast.error('Hay errores en el formulario')
+        let errorsArray = []
+        err.response.data.errors.map( (value, key) => {
+          let errorObj = {
+            ['campo']: value.param,
+            ['mensaje']: value.msg
+          };
+          errorsArray.push(errorObj)
+        })
+        setErrors(errorsArray)
       } else if(err.request){
         toast.error('Error al enviar el formulario: ' + err.request.data)
       } else if(err.message){
@@ -67,18 +95,6 @@ function FormNovedadBibliografica() {
       }
     }
     setLoading(false)
-  }
-
-  const getYears = () => {
-    let minOffset = 0, maxOffset = 250;
-    let thisYear = (new Date()).getFullYear();
-    let allYears = [];
-    for(let x = 0; x <= maxOffset; x++) {
-        allYears.push(thisYear - x)
-    }
-    return allYears.map((year) => {
-      return <option key={'anno-'+year} value={year}>{year} </option>;
-    });
   }
 
   return (
@@ -117,22 +133,41 @@ function FormNovedadBibliografica() {
             value={subtitulo}
           />
         </div>
-        <div className="mb-6">
-          <label
-            htmlFor="editorial"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
-          >
-            Editorial
-          </label>
-          <input
-            type="text"
-            id="editorial"
-            name="editorial"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Ediciones Complutense"           
-            onChange={e => setEditorial(e.target.value)}
-            value={editorial}
-          />
+        <div className="grid gap-6 mb-6 md:grid-cols-2">
+          <div>
+            <label
+              htmlFor="lugarEdicion"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
+            >
+              Lugar de edición
+            </label>
+            <input
+              type="text"
+              id="lugarEdicion"
+              name="lugarEdicion"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Barcelona"
+              onChange={e => setLugarEdicion(e.target.value)}
+              value={lugarEdicion}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="editorial"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
+            >
+              Editorial
+            </label>
+            <input
+              type="text"
+              id="editorial"
+              name="editorial"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Ediciones Complutense"           
+              onChange={e => setEditorial(e.target.value)}
+              value={editorial}
+            />
+          </div>
         </div>
         <div className="mb-6">
           <label
@@ -151,42 +186,23 @@ function FormNovedadBibliografica() {
             value={coleccion}
           />
         </div>
-        <div className="grid gap-6 mb-6 md:grid-cols-2">
-          <div>
-            <label
-              htmlFor="anno"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
-            >
-              Año de publicación
-            </label>
-            <select
-              className="select select-bordered w-full max-w-lg" 
-              name="anno"
-              value={anno}
-              onChange={e => setAnno(e.target.value)}
-            >
-              <option value="" disabled>Seleccione el año de publicación</option>
-              { getYears() }
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="lugarEdicion"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
-            >
-              Lugar de edición
-            </label>
-            <input
-              type="text"
-              id="lugarEdicion"
-              name="lugarEdicion"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Barcelona"
-              onChange={e => setLugarEdicion(e.target.value)}
-              value={lugarEdicion}
-            />
-          </div>
-          
+        <div className="mb-6">
+          <label
+            htmlFor="anno"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
+          >
+            Año de publicación
+          </label>
+          <input
+            type="year"
+            id="anno"
+            name="anno"
+            className="w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder=""
+            onFocus={handleFocusAnno}
+            onChange={e => setAnno(e.target.value)}
+            value={anno}
+          />
         </div>
         <div className="mb-6">
           <label htmlFor="url" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">URL de acceso abierto al libro completo</label>
@@ -204,6 +220,7 @@ function FormNovedadBibliografica() {
       <FormNovedadBibliograficaFormato formatos={formatos} setFormatos={setFormatos} />
       <FormNovedadBibliograficaDescripcion descripcion={descripcion} setDescripcion={setDescripcion} />
       <FormNovedadBibliograficaIndice indice={indice} setIndice={setIndice} />
+      <FormNovedadBibliograficaImagenes imagenes={imagenes} setImagenes={setImagenes} />
       <div className="mb-6">
         <label className="inline-flex relative items-center cursor-pointer">
           <input
@@ -225,6 +242,49 @@ function FormNovedadBibliografica() {
         </button>
       </div>
     </form>
+    { 
+      errors && errors.map((error, key) => (
+        <ErrorAlert key={'form-nb-error-' + key} error={error.mensaje} />
+      ))
+    }
+    {
+      currentModal===1 ? (
+        <ModalNovedadBibliograficaStep1
+          autores={autores}
+          titulo={titulo}
+          subtitulo={subtitulo}
+          anno={anno}
+          lugarEdicion={lugarEdicion}
+          editorial ={editorial}
+          coleccion={coleccion}
+          url={url}
+          tematicas={tematicas}
+          formatos={formatos}
+          indice={indice}
+          descripcion={descripcion}
+          imagenes={imagenes}
+          currentModal={currentModal}
+          setCurrentModal={setCurrentModal}
+        /> 
+      ) : ( 
+        currentModal===2 ? (
+          <ModalNovedadBibliograficaStep2 
+            currentModal={currentModal}
+            setCurrentModal={setCurrentModal} 
+          />
+        ) : ( 
+          currentModal===3 ? (
+            <ModalNovedadBibliograficaStep3 
+              currentModal={currentModal}
+              setCurrentModal={setCurrentModal} 
+            />
+          ) : ( 
+            <></>
+          )
+        )
+      )
+    }
+
     </>
   )
 }

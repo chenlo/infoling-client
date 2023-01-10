@@ -16,15 +16,45 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
   ])
 
   const tiposFormato = [
+    "Libro impreso",
     "eBook",
     "PDF",
-    "eBook / PDF",
-    "Otros"
+    "eBook / PDF"
   ]
+  const convertToIsbn13 = (input) => {
+    //9781566199094 -> 978-1-56619-909-4
+    if(input.length===13 && input.indexOf('-')===-1){
+      let part_1 = input.substr(0,3);
+      let part_2 = input.substr(3,1);
+      let part_3 = input.substr(4,5);
+      let part_4 = input.substr(9,3);
+      let part_5 = input.substr(12,1);
+      return (part_1 + "-" + part_2 + "-" + part_3 + "-" + part_4 + "-" + part_5);
+    }
+    return input;
+  }
+
+  const convertToIsbn10 = (input) => {
+    // 1566199093 -> 1-56619-909-3
+    if(input.length===10 && input.indexOf('-')===-1){
+      let part_1 = input.substr(0,1);
+      let part_2 = input.substr(1,5);
+      let part_3 = input.substr(6,3);
+      let part_4 = input.substr(9,1);
+      return (part_1 + "-" + part_2 + "-" + part_3 + "-" + part_4);
+    }
+    return input;
+  }
 
   const handleFormChange = (index, e) => {
     let data = [...inputFields];
-    data[index][e.target.name] = e.target.value;
+    if(e.target.name==='isbn13'){
+      data[index][e.target.name] = convertToIsbn13(e.target.value)
+    } else if(e.target.name==='isbn10'){
+      data[index][e.target.name] = convertToIsbn10(e.target.value)
+    } else {
+      data[index][e.target.name] = e.target.value;
+    }
     setInputFields(data);
     setFormatos(data);
   }
@@ -75,7 +105,7 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                     id="isbn13"
                     name="isbn13"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="ISBN-13: 978-1-56619-909-4"
+                    placeholder="978-1-56619-909-4"
                     value={inputFields[index].isbn13}
                     onChange={e => handleFormChange(index, e)}
                   />
@@ -85,14 +115,14 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                     htmlFor="isbn10"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    ISBN-10 (antiguo)
+                    ISBN-10
                   </label>
                   <input
                     type="text"
                     id="isbn10"
                     name="isbn10"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="ISBN-10: 1-56619-909-3"
+                    placeholder="1-56619-909-3"
                     value={inputFields[index].isbn10}
                     onChange={e => handleFormChange(index, e)}
                   />
@@ -129,9 +159,8 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                     type="number"
                     id="numPag"
                     name="numPag"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="w-24 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="100"
-                    required
                     value={inputFields[index].numPag}
                     onChange={e => handleFormChange(index, e)}
                   />
@@ -147,7 +176,7 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                       htmlFor="precioEur"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
-                      Precio (euros)
+                      Precio: en euros
                     </label>
                     <label className="input-group flex items-center select-none">
                       <input
@@ -156,12 +185,10 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                         id="precioEur"
                         name="precioEur"
                         placeholder="0.01"
-                        className="input input-bordered"
-                        required
+                        className="input input-bordered w-32"
                         value={inputFields[index].precioEur}
                         onChange={e => handleFormChange(index, e)}
                       />
-                      <span className="ml-2">EUR</span>
                     </label>
                   </div>
                 </div>
@@ -171,17 +198,16 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
                       htmlFor="precioUsa"
                       className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
-                      Precio (dólares)
+                      Precio: en dólares
                     </label>
                     <label className="input-group flex items-center select-none">
-                      <span className="mr-2">US $</span>
                       <input
                         type="number"
                         step="any"
                         id="precioUsa"
                         name="precioUsa"
                         placeholder="0.01"
-                        className="input input-bordered"
+                        className="input input-bordered w-32"
                         value={inputFields[index].precioUsa}
                         onChange={e => handleFormChange(index, e)}
                       />
@@ -199,7 +225,6 @@ function FormNovedadBibliograficaFormato({ formatos, setFormatos }) {
             ?
               <button
                 className="btn btn-outline btn-secondary"
-                disabled={!(inputFields[inputFields.length-1].isbn13 || !inputFields[inputFields.length-1].isbn10) || inputFields.length>=2}
                 onClick={e => addFields(e)}
               >
                 <DocumentPlusIcon className="flex-shrink-0 w-6 h-6 mr-2"  />Añadir formato de edición

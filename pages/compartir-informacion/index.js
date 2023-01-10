@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import Heading from '../../components/site/heading';
-import Container from '../../components/container';
+import Container from '../../components/layout/container';
 
 export default function CompartirInformacion() {
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import logo from '../public/img/logo.png'
+import logo from '../../public/img/logo.png'
 import Account from './navbar-account'
 
 export default function Navbar() {
