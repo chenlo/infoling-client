@@ -1,5 +1,4 @@
-import {useState, useEffect} from 'react'
-import Image from 'next/image'
+import {useState } from 'react'
 import { UserIcon } from '@heroicons/react/24/outline'
 import { BookOpenIcon } from '@heroicons/react/24/outline'
 
@@ -16,9 +15,7 @@ function ModalNovedadBibliograficaStep1({
     formatos,
     indice,
     descripcion,
-    imagenes,
-    currentModal,
-    setCurrentModal
+    imagenes
 }) {
 
     const openNextModal = (e) => {
@@ -26,7 +23,6 @@ function ModalNovedadBibliograficaStep1({
         document.getElementById('modal-form-nb-1').checked = false;
         document.getElementById('modal-form-nb-2').checked = true;
         document.getElementById('modal-form-nb-3').checked = false;
-        setCurrentModal(currentModal+1)
     }
 
     return (
@@ -37,16 +33,15 @@ function ModalNovedadBibliograficaStep1({
                     <h3 className="font-bold text-lg pb-12">Estos son los datos que se enviarán a Infoling. Por favor revise que todo sea correcto y pulse Enviar. En caso contrario pulse Modificar.</h3>
 
                     <div className="grid grid-cols-5 gap-3">
-                        <div className="bg-blue-100">
-                            <div className="avatar">
-                                <div className="w-32 rounded">
-                                {
-                                    imagenes && <img src={URL.createObjectURL(imagenes)} />
-                                }
-                                </div>
+                        <div className="h-full w-48 bg-gray-100 border border-gray-300 flex flex-col">
+                            <div className="h-6 bg-gray-400 opacity-50 w-full">
+                                Imagen del libro
                             </div>
+                            {
+                                imagenes && <img className="w-full object-contain min-h-0" src={URL.createObjectURL(imagenes)} />
+                            }
                         </div>
-                        <div className="bg-red-100 col-span-4 p-4">
+                        <div className="bg-blue-100 col-span-4 p-4">
                             <p className="text-xl">
                                 <strong>Título: </strong>{ titulo }
                             </p>
@@ -140,7 +135,9 @@ function ModalNovedadBibliograficaStep1({
                     </div>
                     <div className="modal-action">
                         <label htmlFor="modal-form-nb-1" className="btn btn-secondary">Modificar</label>
-                        <label className="btn btn-primary" onClick={(e)=>openNextModal(e)}>Confirmar</label>
+                        <button type="submit" className="btn btn-primary" onClick={(e)=>openNextModal(e)}>
+                            Confirmar
+                        </button>
                     </div>
 
                 </div>

@@ -1,8 +1,12 @@
-function ModalNovedadBibliograficaStep3({setCurrentModal}) {
+import { useRouter } from 'next/router'
 
-    const openNextModal = (e) => {
+function ModalNovedadBibliograficaStep3() {
+
+    const router = useRouter()
+
+    const closeModal = (e) => {
         e.preventDefault()
-        setCurrentModal(0)
+        router.push('/')
     }
 
     return (
@@ -13,14 +17,14 @@ function ModalNovedadBibliograficaStep3({setCurrentModal}) {
                     <h3 className="font-bold text-lg pb-12">Gracias</h3>
                     <div className="p-6">
                         <p>
-                            Lorem...
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore nulla enim voluptatem corporis fuga officia eius harum necessitatibus, unde nihil ullam cumque natus dolor earum facere, aspernatur quia? Cum, dolorum.
                         </p>
                     </div>
                     <div className="modal-action">
-                        <label htmlFor="modal-form-nb-1" className="btn btn-secondary">Modificar</label>
-                        <label className="btn btn-primary" onClick={(e)=>openNextModal(e)}>Confirmar</label>
+                        <button className="btn btn-secondary" onClick={(e)=>closeModal(e)}>
+                            De nada
+                        </button>
                     </div>
-
                 </div>
             </div>
         </>

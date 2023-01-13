@@ -16,7 +16,8 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
     "Análisis del discurso",
     "Antropología lingüística",
     "Ciencia cognitiva",
-    "Español como lengua extranjera (ELE), Español como segunda lengua (EL2)",
+    "Español como lengua extranjera (ELE)", 
+    "Español como segunda lengua (EL2)",
     "Filosofía del lenguaje",
     "Fonética",
     "Fonología",
@@ -51,9 +52,9 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
   return (
     <fieldset className="border border-solid border-gray-300 p-5 mb-10 bg-base-100">
         <legend className="text-secondary bg-base-100 p-6 pt-3 required">Temática</legend>
-        <div className="flex items-center select-none pb-5">
+        <div className="lg:flex lg:items-center pb-5">
             <select 
-                className="select select-bordered w-full max-w-lg" 
+                className="select select-bordered w-full max-w-lg m-2" 
                 onChange={handleChangeTematica}
                 value={tematicaSelected}
             >
@@ -65,7 +66,7 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
                 ))}
             </select>
             <button
-                className="btn btn-outline btn-secondary m-2"
+                className="btn btn-outline btn-secondary"
                 disabled={!tematicaSelected}
                 onClick={(e) => {
                     e.preventDefault();
@@ -78,7 +79,7 @@ function FormNovedadBibliograficaTematica({ tematicas, setTematicas }) {
                 <PlusCircleIcon className="flex-shrink-0 w-6 h-6 mr-2" /> Añadir temática
             </button>
         </div>
-        <div className="flex justify-start">
+        <div className="lg:flex lg:justify-start">
             {
                 tematicas.map((item, index) =>
                     <div key={'tematica-'+index} className="badge badge-info gap-3 mr-2">

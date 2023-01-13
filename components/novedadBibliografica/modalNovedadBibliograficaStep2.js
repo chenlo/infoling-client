@@ -1,15 +1,71 @@
 import {useState} from 'react'
+import { ThreeDots } from "react-loader-spinner";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-function ModalNovedadBibliograficaStep2({currentModal, setCurrentModal}) {
+function ModalNovedadBibliograficaStep2({
+    autores,
+    titulo,
+    subtitulo,
+    anno,
+    lugarEdicion,
+    editorial,
+    coleccion,
+    url,
+    tematicas,
+    formatos,
+    indice,
+    descripcion,
+    imagenes
+}) {
 
     const [terms, setTerms] = useState(false)
+    const [loading, setLoading] = useState(false)
     
-    const openNextModal = (e) => {
+    const openNextModal = async (e) => {
         e.preventDefault()
-        document.getElementById('modal-form-nb-1').checked = false;
+        setLoading(true)
+        try {
+            const { data } = await axios.post(
+                `${process.env.NEXT_PUBLIC_API}/novedad-bibliografica`, 
+                {
+                    autores,
+                    titulo,
+                    subtitulo,
+                    anno,
+                    lugarEdicion,
+                    editorial,
+                    coleccion,
+                    url,
+                    tematicas,
+                    formatos,
+                    indice,
+                    descripcion,
+                    imagenes
+                }
+            );
+            document.getElementById('modal-form-nb-1').checked = false;
+            document.getElementById('modal-form-nb-2').checked = false;
+            document.getElementById('modal-form-nb-3').checked = true;
+        } catch (err) {
+            if(err.response){
+                toast.error('Error en el libro a registrar: ' + err.response)
+            } else if(err.request){
+                toast.error('Error al enviar el formulario: ' + err.request.data)
+            } else if(err.message){
+                toast.error('Error: ' + err.message)
+            } else {
+                toast.error('Error al registrar el libro')
+            }
+        }
+        setLoading(false)
+    }
+
+    const closeModal = async (e) => {
+        e.preventDefault()
+        document.getElementById('modal-form-nb-1').checked = true;
         document.getElementById('modal-form-nb-2').checked = false;
-        document.getElementById('modal-form-nb-3').checked = true;
-        setCurrentModal(currentModal+1)
+        document.getElementById('modal-form-nb-3').checked = false;
     }
 
     const handleChangeTerms = () => {
@@ -48,7 +104,21 @@ function ModalNovedadBibliograficaStep2({currentModal, setCurrentModal}) {
                             08193 Bellaterra</p>
                     </div>
                     <div className="modal-action">
-                        <label className="btn btn-primary" disabled={ !terms } onClick={(e)=>openNextModal(e)}>Registrar la novedad bibliográfica</label>
+                        <button className="btn btn-secondary" onClick={(e)=>closeModal(e)}>
+                            Atrás
+                        </button>
+                        <button className="btn btn-primary" disabled={!terms} onClick={(e)=>openNextModal(e)}>
+                            {loading ? (
+                            <ThreeDots
+                                height="25"
+                                width="40"
+                                color="#fff"
+                                ariaLabel="three-dots-loading"
+                            />
+                            ) : (
+                            "Enviar novedad bibliográfica"
+                            )}
+                        </button>
                     </div>
 
                 </div>
