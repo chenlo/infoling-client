@@ -66,13 +66,10 @@ function FormNovedadBibliografica() {
           formatos,
           indice,
           descripcion,
-          imagenes,
+          imagenes
         }
       );
       setErrors([]);
-      toast.success(
-        "Los datos proporcionados de la Novedad Bibliográfica son válidos"
-      );
       document.getElementById("modal-form-nb-1").checked = true;
       document.getElementById("modal-form-nb-2").checked = false;
       document.getElementById("modal-form-nb-3").checked = false;

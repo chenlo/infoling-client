@@ -44,6 +44,9 @@ function ModalNovedadBibliograficaStep2({
                     imagenes
                 }
             );
+            toast.success(
+                "Novedad bibliográfica registrada correctamente"
+            );
             document.getElementById('modal-form-nb-1').checked = false;
             document.getElementById('modal-form-nb-2').checked = false;
             document.getElementById('modal-form-nb-3').checked = true;
