@@ -1,67 +1,13 @@
 import {useState} from 'react'
 import { ThreeDots } from "react-loader-spinner";
-import { toast } from "react-toastify";
-import axios from "axios";
 
-function ModalNovedadBibliograficaStep2({
-    autores,
-    titulo,
-    subtitulo,
-    anno,
-    lugarEdicion,
-    editorial,
-    coleccion,
-    url,
-    tematicas,
-    formatos,
-    indice,
-    descripcion,
-    imagenes
-}) {
-
+function ModalNovedadBibliograficaStep2({loading, setSaveForm}) {
+   
     const [terms, setTerms] = useState(false)
-    const [loading, setLoading] = useState(false)
-    
-    const openNextModal = async (e) => {
+
+    const submitForm = async (e) => {
         e.preventDefault()
-        setLoading(true)
-        try {
-            const { data } = await axios.post(
-                `${process.env.NEXT_PUBLIC_API}/novedad-bibliografica`, 
-                {
-                    autores,
-                    titulo,
-                    subtitulo,
-                    anno,
-                    lugarEdicion,
-                    editorial,
-                    coleccion,
-                    url,
-                    tematicas,
-                    formatos,
-                    indice,
-                    descripcion,
-                    imagenes
-                }
-            );
-            toast.success(
-                "Novedad bibliográfica registrada correctamente"
-            );
-            document.getElementById('modal-form-nb-1').checked = false;
-            document.getElementById('modal-form-nb-2').checked = false;
-            document.getElementById('modal-form-nb-3').checked = true;
-        } catch (err) {
-            if(err.response){
-                toast.error('Error en el libro a registrar: ' + err.response)
-            } else if(err.request){
-                toast.error('Error al enviar el formulario: ' + err.request.data)
-            } else if(err.message){
-                toast.error('Error: ' + err.message)
-            } else {
-                toast.error('Error al registrar el libro')
-            }
-        }
-        setLoading(false)
+        setSaveForm(true)
     }
 
     const closeModal = async (e) => {
@@ -110,7 +56,7 @@ function ModalNovedadBibliograficaStep2({
                         <button className="btn btn-secondary" onClick={(e)=>closeModal(e)}>
                             Atrás
                         </button>
-                        <button className="btn btn-primary" disabled={!terms} onClick={(e)=>openNextModal(e)}>
+                        <button className="btn btn-primary" disabled={!terms} onClick={(e)=>submitForm(e)}>
                             {loading ? (
                             <ThreeDots
                                 height="25"

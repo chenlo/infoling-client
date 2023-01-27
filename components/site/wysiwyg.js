@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ContentState, convertToRaw } from 'draft-js';
 import { EditorState } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 import DOMPurify from 'dompurify';
@@ -13,10 +14,9 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 export default function WYSIWYGEditor({setContent}) {
     
   const [editorState, setEditorState] = useState(
-    () => EditorState.createEmpty(),
+    () => EditorState.createEmpty()
   );
   
-
   useEffect(() => {
     let html = convertToHTML(editorState.getCurrentContent());
     setContent(DOMPurify.sanitize(html));

@@ -1,12 +1,12 @@
 import React from 'react'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Link from 'next/link'
 import axios from "axios"
 import { toast } from 'react-toastify'
 import { ThreeDots } from 'react-loader-spinner';
 
 import Heading from '../../components/site/heading';
-import Container from '../../components/container';
+import Container from '../../components/layout/container';
 
 import { Context } from '../../context'
 import { useRouter } from 'next/router'
@@ -18,7 +18,12 @@ export default function Login() {
   const [password, setPassword] = useState("")
 
   const { state, dispatch } = useContext(Context)
+  const { user } = state 
   const router = useRouter()
+  
+  useEffect(()=>{
+    if (user !== null) router.push("/")
+  }, [])
   
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -63,6 +68,9 @@ export default function Login() {
               {loading ? <ThreeDots height="25" width="40" color="#fff" ariaLabel="three-dots-loading" /> : "Enviar"}
             </button>
           </form>
+        </div>
+        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+          <p>¿No se ha registrado todavía? <Link href="/auth/registro" className='font-medium text-primary hover:underline dark:text-primary-500'>Registro</Link></p>
         </div>
       </Container>
     </div>

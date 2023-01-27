@@ -25,6 +25,14 @@ function ModalNovedadBibliograficaStep1({
         document.getElementById('modal-form-nb-3').checked = false;
     }
 
+    function createMarkupDescripcion() {
+        return {__html: descripcion};
+    }
+
+    function createMarkupIndice() {
+        return {__html: indice};
+    }
+
     return (
         <>
             <input type="checkbox" id="modal-form-nb-1" className="modal-toggle" />
@@ -123,15 +131,11 @@ function ModalNovedadBibliograficaStep1({
                     </div>
                     <div className="mt-8">
                         <h2 className="text-xl pb-2">Descripción</h2>
-                        <div>
-                            {descripcion}
-                        </div>
+                        <div dangerouslySetInnerHTML={createMarkupDescripcion()} /> 
                     </div>
                     <div className="mt-8">
                         <h2 className="text-xl pb-2">Índice</h2>
-                        <div>
-                            {indice}
-                        </div>
+                        <div dangerouslySetInnerHTML={createMarkupIndice()} />
                     </div>
                     <div className="modal-action">
                         <label htmlFor="modal-form-nb-1" className="btn btn-secondary">Modificar</label>

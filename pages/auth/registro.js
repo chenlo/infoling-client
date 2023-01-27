@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import { ThreeDots } from 'react-loader-spinner';
 
 import Heading from '../../components/site/heading';
-import Container from '../../components/container';
+import Container from '../../components/layout/container';
 
 export default function Registro() {
 
@@ -79,7 +79,7 @@ export default function Registro() {
               {loading ? <ThreeDots height="25" width="40" color="#fff" ariaLabel="three-dots-loading" /> : "Enviar"}
             </button>
             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-              ¿Ya se ha registrado? <Link href="/auth/login" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Identifíquese aquí</Link>
+              ¿Ya se ha registrado? <Link href="/auth/login" className="font-medium text-primary hover:underline dark:text-primary-500">Identifíquese aquí</Link>
             </p>
           </form>
         </div>

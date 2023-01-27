@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import FormNovedadBibliograficaAutor from "./formNovedadBibliograficaAutor";
 import FormNovedadBibliograficaFormato from "./formNovedadBibliograficaFormato";
@@ -35,8 +35,12 @@ function FormNovedadBibliografica() {
   const [indice, setIndice] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [imagenes, setImagenes] = useState("");
-
   const [terms, setTerms] = useState(false);
+
+  const [saveForm, setSaveForm] = useState(false);
+
+  const [idNovedadBibliografica, setIdNovedadBibliografica] = useState('');
+  
 
   const handleChangeTerms = () => {
     setTerms(!terms);
@@ -47,7 +51,7 @@ function FormNovedadBibliografica() {
     setAnno(currentYear);
   };
 
-  const handleSubmit = async (e) => {
+  const handleValidation = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -96,6 +100,64 @@ function FormNovedadBibliografica() {
     setLoading(false);
   };
 
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+        const { data_novedad_bibliografica_saved } = await axios.post(
+            `${process.env.NEXT_PUBLIC_API}/novedad-bibliografica`, 
+            {
+                autores,
+                titulo,
+                subtitulo,
+                anno,
+                lugarEdicion,
+                editorial,
+                coleccion,
+                url,
+                tematicas,
+                formatos,
+                indice,
+                descripcion
+            }
+        );
+        console.log('NB guardada con éxito: ', data_novedad_bibliografica_saved)
+        setIdNovedadBibliografica(data_novedad_bibliografica_saved.id)
+        // Guardamos la imagen del libro
+        const { data_imagenes_saved } = await axios.post(
+          `${process.env.NEXT_PUBLIC_API}/novedad-bibliografica/imagenes`, 
+          {
+            idNovedadBibliografica,
+            imagenes
+          },
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        toast.success(
+            "Novedad bibliográfica registrada correctamente"
+        );
+        // TODO Save imagenes
+        document.getElementById('modal-form-nb-1').checked = false;
+        document.getElementById('modal-form-nb-2').checked = false;
+        document.getElementById('modal-form-nb-3').checked = true;
+    } catch (err) {
+        if(err.response){
+            toast.error('Error en el libro a registrar: ' + err.response)
+        } else if(err.request){
+            toast.error('Error al enviar el formulario: ' + err.request.data)
+        } else if(err.message){
+            toast.error('Error: ' + err.message)
+        } else {
+            toast.error('Error al registrar el libro')
+        }
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if(saveForm){
+      handleSubmit()
+    }
+  }, [saveForm]);
+
   return (
     <>
       <div className="alert bg-base-100 shadow-sm mb-4">
@@ -138,7 +200,7 @@ function FormNovedadBibliografica() {
           que vayan dirigidas a la formación del profesorado.
         </div>
       </div>
-      <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+      <form encType='multipart/form-data' className="space-y-4 md:space-y-6" onSubmit={handleValidation}>
         <FormNovedadBibliograficaAutor
           autores={autores}
           setAutores={setAutores}
@@ -215,40 +277,42 @@ function FormNovedadBibliografica() {
               />
             </div>
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="coleccion"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
-              Colección
-            </label>
-            <input
-              type="text"
-              id="coleccion"
-              name="coleccion"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Obras universales"
-              onChange={(e) => setColeccion(e.target.value)}
-              value={coleccion}
-            />
-          </div>
-          <div className="mb-6">
-            <label
-              htmlFor="anno"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
-            >
-              Año de publicación
-            </label>
-            <input
-              type="year"
-              id="anno"
-              name="anno"
-              className="w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder=""
-              onFocus={handleFocusAnno}
-              onChange={(e) => setAnno(e.target.value)}
-              value={anno}
-            />
+          <div className="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+              <label
+                htmlFor="anno"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300 required"
+              >
+                Año de publicación
+              </label>
+              <input
+                type="year"
+                id="anno"
+                name="anno"
+                className="w-36 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder=""
+                onFocus={handleFocusAnno}
+                onChange={(e) => setAnno(e.target.value)}
+                value={anno}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="coleccion"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+              >
+                Colección
+              </label>
+              <input
+                type="text"
+                id="coleccion"
+                name="coleccion"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Obras universales"
+                onChange={(e) => setColeccion(e.target.value)}
+                value={coleccion}
+              />
+            </div>
           </div>
           <div className="mb-6">
             <label
@@ -337,21 +401,7 @@ function FormNovedadBibliografica() {
         descripcion={descripcion}
         imagenes={imagenes}
       />
-      <ModalNovedadBibliograficaStep2
-        autores={autores}
-        titulo={titulo}
-        subtitulo={subtitulo}
-        anno={anno}
-        lugarEdicion={lugarEdicion}
-        editorial={editorial}
-        coleccion={coleccion}
-        url={url}
-        tematicas={tematicas}
-        formatos={formatos}
-        indice={indice}
-        descripcion={descripcion}
-        imagenes={imagenes}
-      />
+      <ModalNovedadBibliograficaStep2 loading={loading} setSaveForm={setSaveForm} />
       <ModalNovedadBibliograficaStep3 />
     </>
   );
